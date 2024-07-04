@@ -6,28 +6,6 @@ CONFIG_REPO=~/dotfiles
 # Начальный массив директорий из корня репозитория, которые нужно синхронизировать
 declare -a CONFIG_DIRS=("alacritty" "bluetuith" "bspwm" "neofetch" "polybar" "ranger" "redshift" "sxhkd")
 
-# Функция для добавления новых директорий в массив CONFIG_DIRS
-add_new_dirs() {
-  # Загружаем текущее состояние массива из файла
-  if [[ -f config_dirs.txt ]]; then
-    mapfile -t current_dirs < config_dirs.txt
-  else
-    declare -a current_dirs=()
-  fi
-
-  # Ищем все директории в репозитории dotfiles, исключая .git
-  for dir in $(find $CONFIG_REPO -mindepth 1 -maxdepth 1 -type d -not -path "$CONFIG_REPO/.git" -exec basename {} \;); do
-    # Проверяем, есть ли директория в текущем массиве
-    if [[ ! " ${current_dirs[@]} " =~ " ${dir} " ]]; then
-      CONFIG_DIRS+=("$dir")
-      echo "**Добавлена новая директория:** $dir"
-    fi
-  done
-}
-
-# Вызываем функцию для добавления новых директорий
-add_new_dirs
-
 # Функция для загрузки массива CONFIG_DIRS из файла
 load_dirs() {
   if [[ -f config_dirs.txt ]]; then
@@ -40,11 +18,11 @@ load_dirs
 
 # Функция для добавления новых директорий в массив CONFIG_DIRS
 add_new_dirs() {
-  # Ищем все директории в репозитории dotfiles, исключая .git, и добавляем их в массив, если их нет
-  for dir in $(find $CONFIG_REPO -mindepth 1 -maxdepth 1 -type d -not -path "$CONFIG_REPO/.git" -exec basename {} \;); do
+  # Ищем все директории в репозитории dotfiles, включая скрытые, исключая .git
+  for dir in $(find $CONFIG_REPO -mindepth 1 -maxdepth 1 -type d \( ! -name ".git" \) -exec basename {} \;); do
     if [[ ! " ${CONFIG_DIRS[@]} " =~ " ${dir} " ]]; then
       CONFIG_DIRS+=("$dir")
-      echo "**Добавлена новая директория:** $dir"
+      echo "Добавлена новая директория: $dir"
     fi
   done
 }
@@ -54,10 +32,11 @@ save_dirs() {
   printf "%s\n" "${CONFIG_DIRS[@]}" > config_dirs.txt
 }
 
+# Функция для создания символических ссылок для директорий
 link_config_dirs() {
   for dir in "${CONFIG_DIRS[@]}"; do
+    # Проверяем, существует ли директория в ~/.config и является ли она символической ссылкой
     if [ -d "$CONFIG_REPO/$dir" ]; then
-      # Проверяем, существует ли директория в ~/.config и является ли она символической ссылкой
       if [ -L ~/.config/"$dir" ]; then
         # Удаляем существующую символическую ссылку, если она есть
         rm -f ~/.config/"$dir"
@@ -67,16 +46,6 @@ link_config_dirs() {
       fi
       # Создаем символическую ссылку для директории
       ln -sfn "$CONFIG_REPO/$dir" ~/.config/"$dir"
-
-      # Теперь обрабатываем файлы внутри директории
-      find "$CONFIG_REPO/$dir" -mindepth 1 -type f | while read file; do
-        # Получаем относительный путь файла относительно папки $dir
-        relative_path=${file#$CONFIG_REPO/$dir/}
-        # Создаем все необходимые поддиректории в ~/.config
-        mkdir -p "$(dirname ~/.config/$dir/$relative_path)"
-        # Создаем или обновляем символическую ссылку для файла
-        ln -sfn "$file" ~/.config/"$dir/$relative_path"
-      done
     else
       echo "Директория $dir не найдена в репозитории dotfiles."
     fi
