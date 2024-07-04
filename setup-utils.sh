@@ -26,7 +26,7 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 # Установка zsh и oh-my-zsh
 sudo pacman -S zsh
-chsh -s $(which zsh)
+chsh -s /usr/bin/zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # Установка zsh-syntax-highlighting (предполагается, что oh-my-zsh уже установлен)
