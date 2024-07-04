@@ -57,7 +57,18 @@ save_dirs() {
 link_config_dirs() {
   for dir in "${CONFIG_DIRS[@]}"; do
     if [ -d "$CONFIG_REPO/$dir" ]; then
-      # Создаем символические ссылки для файлов внутри директории
+      # Проверяем, существует ли директория в ~/.config и является ли она символической ссылкой
+      if [ -L ~/.config/"$dir" ]; then
+        # Удаляем существующую символическую ссылку, если она есть
+        rm -f ~/.config/"$dir"
+      elif [ -d ~/.config/"$dir" ]; then
+        # Если это директория, но не ссылка, переименовываем её для бэкапа
+        mv ~/.config/"$dir" ~/.config/"$dir".backup
+      fi
+      # Создаем символическую ссылку для директории
+      ln -sfn "$CONFIG_REPO/$dir" ~/.config/"$dir"
+
+      # Теперь обрабатываем файлы внутри директории
       find "$CONFIG_REPO/$dir" -mindepth 1 -type f | while read file; do
         # Получаем относительный путь файла относительно папки $dir
         relative_path=${file#$CONFIG_REPO/$dir/}
