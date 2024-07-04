@@ -11,7 +11,7 @@ makepkg -si
 cd ..
 rm -rf yay
 
-# Установка neovim
+# Установка neovim и других программ
 yay -S neovim ranger firefox telegram-desktop redshift geoclue2 
 
 # Установка tmux и TPM (Tmux Plugin Manager)
@@ -26,16 +26,15 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 # Установка zsh-syntax-highlighting (предполагается, что oh-my-zsh уже установлен)
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
-# Активация zsh-syntax-highlighting в .zshrc
+# Добавление строки для активации zsh-syntax-highlighting в .zshrc
 echo "source ${(q-)ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ~/.zshrc
-
-# Перезагрузка оболочки
-exec zsh
 
 # Установка утилит
 yay -S xclip bat lsd dust ripgrep tldr gtop procs z
 
-# Делаем скрипт исполняемым
+# Обновление кэша шрифтов
+fc-cache -fv
+
+# Делаем скрипт исполняемым и запускаем его
 chmod +x ~/scripts/setup.sh
 ~/scripts/setup.sh
-

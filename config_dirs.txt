@@ -1,0 +1,11 @@
+alacritty
+bluetuith
+bspwm
+neofetch
+polybar
+ranger
+redshift
+sxhkd
+nvim
+libreoffice
+.fonts

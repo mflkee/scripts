@@ -6,6 +6,28 @@ CONFIG_REPO=~/dotfiles
 # Начальный массив директорий из корня репозитория, которые нужно синхронизировать
 declare -a CONFIG_DIRS=("alacritty" "bluetuith" "bspwm" "neofetch" "polybar" "ranger" "redshift" "sxhkd")
 
+# Функция для добавления новых директорий в массив CONFIG_DIRS
+add_new_dirs() {
+  # Загружаем текущее состояние массива из файла
+  if [[ -f config_dirs.txt ]]; then
+    mapfile -t current_dirs < config_dirs.txt
+  else
+    declare -a current_dirs=()
+  fi
+
+  # Ищем все директории в репозитории dotfiles, исключая .git
+  for dir in $(find $CONFIG_REPO -mindepth 1 -maxdepth 1 -type d -not -path "$CONFIG_REPO/.git" -exec basename {} \;); do
+    # Проверяем, есть ли директория в текущем массиве
+    if [[ ! " ${current_dirs[@]} " =~ " ${dir} " ]]; then
+      CONFIG_DIRS+=("$dir")
+      echo "**Добавлена новая директория:** $dir"
+    fi
+  done
+}
+
+# Вызываем функцию для добавления новых директорий
+add_new_dirs
+
 # Функция для загрузки массива CONFIG_DIRS из файла
 load_dirs() {
   if [[ -f config_dirs.txt ]]; then
@@ -13,7 +35,7 @@ load_dirs() {
   fi
 }
 
-# Вызов функции load_dirs в начале скрипта
+# Вызов функции load_dirs
 load_dirs
 
 # Функция для добавления новых директорий в массив CONFIG_DIRS
