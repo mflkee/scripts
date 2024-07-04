@@ -44,6 +44,7 @@ link_individual_files() {
   ln -sfn $CONFIG_REPO/.tmux.conf ~/.tmux.conf
   ln -sfn $CONFIG_REPO/user-dirs.locale ~/user-dirs.locale
   ln -sfn $CONFIG_REPO/user-dirs.dirs ~/user-dirs.dirs
+  ln -sfn $CONFIG_REPO/.fonts ~/.fonts
   
   # Добавьте здесь другие файлы, если необходимо
 }
