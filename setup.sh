@@ -54,13 +54,13 @@ save_dirs() {
   printf "%s\n" "${CONFIG_DIRS[@]}" > config_dirs.txt
 }
 
-# Функция для создания символических ссылок для директорий из массива
 link_config_dirs() {
   for dir in "${CONFIG_DIRS[@]}"; do
     if [ -d "$CONFIG_REPO/$dir" ]; then
-      mkdir -p ~/.config/"$dir"
-      # Рекурсивно перебираем все файлы и поддиректории
-      find "$CONFIG_REPO/$dir" -type f | while read file; do
+      # Создаем символическую ссылку для самой директории
+      ln -sfn "$CONFIG_REPO/$dir" ~/.config/"$dir"
+      # Рекурсивно перебираем все файлы и поддиректории внутри директории
+      find "$CONFIG_REPO/$dir" -mindepth 1 -type f | while read file; do
         # Получаем относительный путь файла относительно папки $dir
         relative_path=${file#$CONFIG_REPO/$dir/}
         # Создаем все необходимые поддиректории
