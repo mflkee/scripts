@@ -17,6 +17,9 @@ yay -S neovim ranger firefox telegram-desktop redshift geoclue2 polybar jq bluez
 # Установка утилит
 yay -S xclip bat lsd dust ripgrep tldr gtop procs z zoxide xorg
 
+# установка смены раскладки
+localectl set-x11-keymap --no-convert us,ru pc105 "" grp:alt_shift_toggle
+
 # Установка tmux и TPM (Tmux Plugin Manager)
 yay -S tmux
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
