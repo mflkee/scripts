@@ -57,23 +57,14 @@ save_dirs() {
 link_config_dirs() {
   for dir in "${CONFIG_DIRS[@]}"; do
     if [ -d "$CONFIG_REPO/$dir" ]; then
-      # Создаем символическую ссылку для самой директории
-      ln -sfn "$CONFIG_REPO/$dir" ~/.config/"$dir"
-      # Рекурсивно перебираем все файлы и поддиректории внутри директории
+      # Создаем символические ссылки для файлов внутри директории
       find "$CONFIG_REPO/$dir" -mindepth 1 -type f | while read file; do
         # Получаем относительный путь файла относительно папки $dir
         relative_path=${file#$CONFIG_REPO/$dir/}
-        # Создаем все необходимые поддиректории
+        # Создаем все необходимые поддиректории в ~/.config
         mkdir -p "$(dirname ~/.config/$dir/$relative_path)"
-        # Проверяем, является ли файл символической ссылкой
-        if [ -L "~/.config/$dir/$relative_path" ]; then
-          # Создаем символическую ссылку для файла
-          ln -sfn "$file" ~/.config/"$dir/$relative_path"
-        else
-          # Удаляем существующий файл, если он не является символической ссылкой
-          rm -f "~/.config/$dir/$relative_path"
-          ln -sfn "$file" ~/.config/"$dir/$relative_path"
-        fi
+        # Создаем или обновляем символическую ссылку для файла
+        ln -sfn "$file" ~/.config/"$dir/$relative_path"
       done
     else
       echo "Директория $dir не найдена в репозитории dotfiles."
