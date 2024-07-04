@@ -12,7 +12,7 @@ cd ..
 rm -rf yay
 
 # Установка neovim и других программ
-yay -S neovim ranger firefox telegram-desktop redshift geoclue2 polybar jq bluez npm
+yay -S neovim ranger firefox telegram-desktop redshift geoclue2 polybar jq bluez npm bluez-utils
 
 # Установка утилит
 yay -S xclip bat lsd dust ripgrep tldr gtop procs z zoxide
@@ -35,6 +35,18 @@ echo "source ${(q-)ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlight
 # Обновление кэша шрифтов
 fc-cache -fv
 
-# Делаем скрипт исполняемым и запускаем его
-chmod +x ~/scripts/setup.sh
-~/scripts/setup.sh
+# Создание директории для политик polkit, если она не существует
+sudo mkdir -p /etc/polkit-1/rules.d/
+
+# Создание файла политики polkit с помощью heredoc
+sudo tee /etc/polkit-1/rules.d/wifi-management.rules > /dev/null <<EOF
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.freedesktop.NetworkManager.network-control" &&
+        subject.isInGroup("networkmanager")) {
+        return polkit.Result.YES;
+    }
+});
+EOF
+
+# Перезагрузка службы polkit
+sudo systemctl restart polkit
