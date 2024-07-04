@@ -3,38 +3,23 @@
 # Путь к вашему репозиторию с dotfiles
 CONFIG_REPO=~/dotfiles
 
-# Начальный массив директорий из корня репозитория, которые нужно синхронизировать
-declare -a CONFIG_DIRS=("alacritty" "bluetuith" "bspwm" "neofetch" "polybar" "ranger" "redshift" "sxhkd")
-
-# Функция для загрузки массива CONFIG_DIRS из файла
-load_dirs() {
-  if [[ -f config_dirs.txt ]]; then
-    mapfile -t CONFIG_DIRS < config_dirs.txt
-  fi
-}
-
-# Вызов функции load_dirs
-load_dirs
-
-# Функция для добавления новых директорий в массив CONFIG_DIRS
-add_new_dirs() {
+# Функция для проверки и добавления новых директорий
+check_and_add_dirs() {
   # Ищем все директории в репозитории dotfiles, включая скрытые, исключая .git
   for dir in $(find $CONFIG_REPO -mindepth 1 -maxdepth 1 -type d \( ! -name ".git" \) -exec basename {} \;); do
-    if [[ ! " ${CONFIG_DIRS[@]} " =~ " ${dir} " ]]; then
-      CONFIG_DIRS+=("$dir")
-      echo "Добавлена новая директория: $dir"
+    # Проверяем, существует ли директория в файловой системе и есть ли она в файле config_dirs.txt
+    if [ -d "$CONFIG_REPO/$dir" ] && grep -Fxq "$dir" config_dirs.txt; then
+      echo "Директория $dir уже существует и указана в config_dirs.txt"
+    else
+      echo "Директория $dir не найдена в config_dirs.txt и будет добавлена"
+      # Здесь можно добавить код для обработки новой директории
     fi
   done
 }
 
-# Функция для сохранения массива CONFIG_DIRS в файл
-save_dirs() {
-  printf "%s\n" "${CONFIG_DIRS[@]}" > config_dirs.txt
-}
-
 # Функция для создания символических ссылок для директорий
 link_config_dirs() {
-  for dir in "${CONFIG_DIRS[@]}"; do
+  for dir in $(cat config_dirs.txt); do
     # Проверяем, существует ли директория в ~/.config и является ли она символической ссылкой
     if [ -d "$CONFIG_REPO/$dir" ]; then
       if [ -L ~/.config/"$dir" ]; then
@@ -63,12 +48,9 @@ link_individual_files() {
   # Добавьте здесь другие файлы, если необходимо
 }
 
-# Вызываем функции для добавления новых директорий и создания символических ссылок
-add_new_dirs
+# Вызываем функции для проверки и добавления новых директорий и создания символических ссылок
+check_and_add_dirs
 link_config_dirs
 link_individual_files
 
-# Сохраняем состояние массива CONFIG_DIRS после добавления новых директорий
-save_dirs
-
-echo "Символические ссылки созданы или обновлены."
+echo "Проверка и добавление директорий завершены. Символические ссылки созданы или обновлены."
