@@ -35,8 +35,6 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:
 # Добавление строки для активации zsh-syntax-highlighting в .zshrc
 echo "source ${(q-)ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ~/.zshrc
 
-# Обновление кэша шрифтов
-fc-cache -fv
 
 # Создание директории для политик polkit, если она не существует
 sudo mkdir -p /etc/polkit-1/rules.d/
@@ -53,3 +51,6 @@ EOF
 
 # Перезагрузка службы polkit
 sudo systemctl restart polkit
+
+# Обновление кэша шрифтов
+fc-cache -fv
