@@ -15,7 +15,7 @@ rm -rf yay
 yay -S neovim ranger firefox telegram-desktop redshift geoclue2 polybar jq bluez npm bluez-utils
 
 # Установка утилит
-yay -S xclip bat lsd dust ripgrep tldr gtop procs z zoxide xorg
+yay -S xclip bat lsd dust ripgrep tldr gtop procs z zoxide xorg fzf
 
 # установка смены раскладки
 localectl set-x11-keymap --no-convert us,ru pc105 "" grp:alt_shift_toggle
