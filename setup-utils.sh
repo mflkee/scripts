@@ -38,7 +38,7 @@ echo "source ${(q-)ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlight
 
 # Создание директории для политик polkit, если она не существует
 sudo mkdir -p /etc/polkit-1/rules.d/
-
+echo "создал sudo mkdir -p /etc/polkit-1/rules.d/"
 # Создание файла политики polkit с помощью heredoc
 sudo tee /etc/polkit-1/rules.d/wifi-management.rules > /dev/null <<EOF
 polkit.addRule(function(action, subject) {
