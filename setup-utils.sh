@@ -15,7 +15,7 @@ rm -rf yay
 yay -S neovim ranger firefox telegram-desktop redshift geoclue2 polybar jq bluez npm bluez-utils
 
 # Установка утилит
-yay -S xclip bat lsd dust ripgrep tldr gtop procs z zoxide
+yay -S xclip bat lsd dust ripgrep tldr gtop procs z zoxide xorg-xset grep gawk
 
 # Установка tmux и TPM (Tmux Plugin Manager)
 yay -S tmux
