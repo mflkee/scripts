@@ -12,10 +12,10 @@ cd ..
 rm -rf yay
 
 # Установка neovim
-sudo pacman -S neovim
+yay -S neovim ranger firefox telegram-desktop redshift geoclue2 
 
 # Установка tmux и TPM (Tmux Plugin Manager)
-sudo pacman -S tmux
+yay -S tmux
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 # Установка zsh и oh-my-zsh
@@ -33,7 +33,7 @@ echo "source ${(q-)ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlight
 exec zsh
 
 # Установка утилит
-sudo pacman -S xclip bat lsd dust ripgrep tldr gtop procs z
+yay -S xclip bat lsd dust ripgrep tldr gtop procs z
 
 # Делаем скрипт исполняемым
 chmod +x ~/scripts/setup.sh
