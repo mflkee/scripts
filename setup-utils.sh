@@ -12,7 +12,7 @@ cd ..
 rm -rf yay
 
 # Установка neovim и других программ
-yay -S neovim ranger firefox telegram-desktop redshift geoclue2 polybar jq
+yay -S neovim ranger firefox telegram-desktop redshift geoclue2 polybar jq bluez
 
 # Установка tmux и TPM (Tmux Plugin Manager)
 yay -S tmux
