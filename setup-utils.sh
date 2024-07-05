@@ -35,22 +35,7 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:
 # Добавление строки для активации zsh-syntax-highlighting в .zshrc
 echo "source ${(q-)ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ~/.zshrc
 
-
-# Создание директории для политик polkit, если она не существует
-sudo mkdir -p /etc/polkit-1/rules.d/
-echo "создал sudo mkdir -p /etc/polkit-1/rules.d/"
-# Создание файла политики polkit с помощью heredoc
-sudo tee /etc/polkit-1/rules.d/wifi-management.rules > /dev/null <<EOF
-polkit.addRule(function(action, subject) {
-    if (action.id == "org.freedesktop.NetworkManager.network-control" &&
-        subject.isInGroup("networkmanager")) {
-        return polkit.Result.YES;
-    }
-});
-EOF
-
-# Перезагрузка службы polkit
-sudo systemctl restart polkit
+echo '%network ALL=(ALL) NOPASSWD: /sbin/nmcli radio wifi off, /sbin/nmcli radio wifi on' | sudo tee -a /etc/sudoers.d/network-wifi > /dev/null
 
 # Обновление кэша шрифтов
 fc-cache -fv
