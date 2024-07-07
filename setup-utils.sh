@@ -12,7 +12,7 @@ cd ..
 rm -rf yay
 
 # Установка neovim и других программ
-yay -S neovim ranger firefox telegram-desktop redshift geoclue2 polybar jq bluez npm bluez-utils pulsemixer xclip bat lsd dust ripgrep tldr gtop procs z zoxide xorg fzf feh zsh-syntax-highlighting
+yay -S neovim ranger firefox telegram-desktop redshift geoclue2 polybar jq bluez npm bluez-utils pulsemixer xclip bat lsd dust ripgrep tldr gtop procs z zoxide xorg fzf feh zsh-syntax-highlighting xcursor-hackneyed-dark
 
 # установка смены раскладки
 localectl set-x11-keymap --no-convert us,ru pc105 "" grp:alt_shift_toggle
